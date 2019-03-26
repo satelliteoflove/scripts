@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+
 # Copies a single file to multiple hosts based on supplied hostname file. User
-# is prompted for password and the file is copied to the local /usr/bin/
+# is prompted for credentials and the file is copied to the local /usr/bin/
 # directory on the destination host.
 
 
@@ -20,8 +21,6 @@ get_password()
 
 copy_file()
 {
-    while IFS= read SERVER
-    do
         echo "Current server: $SERVER"
         echo "Copying file..."
         sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no \
@@ -32,7 +31,6 @@ copy_file()
             -o UserKnownHostsFile=/dev/null -l "$USERNAME" \
             "$SERVER" chmod 755 "/usr/bin/$FILETOCOPY"
         echo "Done."
-    done <"$HOSTSFILE"
 }
 
 usage()
@@ -74,7 +72,10 @@ echo "Cleaning hostsfile of nasty Windows-only characters..."
 sed -i -e "s/\r//g" $HOSTSFILE
 
 get_password
-copy_file
+
+while IFS= read SERVER; do
+    copy_file
+done <"$HOSTSFILE"
 
 # Reset variables to clear sensitive data.
 USERNAME=
