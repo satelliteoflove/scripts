@@ -26,7 +26,7 @@ copy_file()
         sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null "$FILETOCOPY" \
             "$USERNAME"@"$SERVER":/usr/bin/
-        echo "Resetting permissions..."
+        echo "Resetting permissions on remote version of $FILETOCOPY..."
         sshpass -p "$PASSWORD" ssh -n -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null -l "$USERNAME" \
             "$SERVER" chmod 755 "/usr/bin/$FILETOCOPY"
